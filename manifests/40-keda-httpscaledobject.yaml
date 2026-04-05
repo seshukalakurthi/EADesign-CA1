@@ -1,0 +1,27 @@
+# KEDA HTTP Add-on: HTTPScaledObject for checkout service
+# This allows checkout to scale from 0 replicas when traffic arrives
+# and back to 0 when idle.
+#
+# Prerequisites:
+#   kubectl apply -f https://github.com/kedacore/keda/releases/download/v2.19.0/keda-2.19.0.yaml
+#   kubectl apply -f https://github.com/kedacore/http-add-on/releases/download/v0.13.0/http-add-on-0.13.0.yaml
+#
+apiVersion: http.keda.sh/v1alpha1
+kind: HTTPScaledObject
+metadata:
+  name: checkout-httpso
+  namespace: ca1
+spec:
+  hosts:
+    - localhost
+  pathPrefixes:
+    - /checkout
+  scaleTargetRef:
+    deployment: checkout
+    service: checkout-svc
+    port: 80
+  replicas:
+    min: 0
+    max: 5
+  scaledownPeriod: 60      # seconds idle before scaling to zero
+  targetPendingRequests: 10

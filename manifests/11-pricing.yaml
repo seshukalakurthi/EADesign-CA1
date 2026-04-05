@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pricing
+  namespace: ca1
+  labels:
+    app: pricing
+    app.kubernetes.io/part-of: ca1-checkout
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pricing
+  template:
+    metadata:
+      labels:
+        app: pricing
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: pricing
+          image: ca1/pricing:v1
+          imagePullPolicy: Never          # loaded via k3s ctr images import
+          ports:
+            - containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+            - name: TAX_RATE
+              value: "0.23"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3002
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pricing-svc
+  namespace: ca1
+  labels:
+    app: pricing
+spec:
+  selector:
+    app: pricing
+  ports:
+    - port: 80
+      targetPort: 3002
