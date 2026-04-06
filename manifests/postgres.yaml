@@ -5,7 +5,6 @@ metadata:
   namespace: ca1
   labels:
     app: postgres
-    app.kubernetes.io/part-of: ca1-checkout
 spec:
   replicas: 1
   selector:
@@ -60,8 +59,6 @@ kind: Service
 metadata:
   name: postgres-svc
   namespace: ca1
-  labels:
-    app: postgres
 spec:
   selector:
     app: postgres

@@ -5,7 +5,6 @@ metadata:
   namespace: ca1
   labels:
     app: pricing
-    app.kubernetes.io/part-of: ca1-checkout
 spec:
   replicas: 1
   selector:
@@ -22,7 +21,7 @@ spec:
       containers:
         - name: pricing
           image: ca1/pricing:v1
-          imagePullPolicy: Never          # loaded via k3s ctr images import
+          imagePullPolicy: Never
           ports:
             - containerPort: 3002
           env:
@@ -55,8 +54,6 @@ kind: Service
 metadata:
   name: pricing-svc
   namespace: ca1
-  labels:
-    app: pricing
 spec:
   selector:
     app: pricing

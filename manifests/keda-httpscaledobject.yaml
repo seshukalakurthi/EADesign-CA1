@@ -6,8 +6,9 @@ metadata:
 spec:
   hosts:
     - keda-add-ons-http-interceptor-proxy.keda.svc.cluster.local
+    - localhost
   pathPrefixes:
-    - /checkout
+    - /
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
