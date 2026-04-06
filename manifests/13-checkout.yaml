@@ -5,9 +5,8 @@ metadata:
   namespace: ca1
   labels:
     app: checkout
-    app.kubernetes.io/part-of: ca1-checkout
 spec:
-  replicas: 0          # KEDA manages this — do not change manually
+  replicas: 0
   selector:
     matchLabels:
       app: checkout
@@ -21,7 +20,7 @@ spec:
         runAsUser: 1000
       containers:
         - name: checkout
-          image: ca1/checkout:v1
+          image: ca1/checkout:v2
           imagePullPolicy: Never
           ports:
             - containerPort: 3001
@@ -47,13 +46,14 @@ spec:
             httpGet:
               path: /health
               port: 3001
-            initialDelaySeconds: 5
-            periodSeconds: 5
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            failureThreshold: 10
           livenessProbe:
             httpGet:
               path: /health
               port: 3001
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 10
           resources:
             requests:
@@ -68,8 +68,6 @@ kind: Service
 metadata:
   name: checkout-svc
   namespace: ca1
-  labels:
-    app: checkout
 spec:
   selector:
     app: checkout
