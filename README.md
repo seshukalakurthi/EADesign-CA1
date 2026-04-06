@@ -12,7 +12,6 @@ Checkout – Core Service
 Pricing – Price of the Product and tax
 Inventory – Validates stock availability
 PostgreSQL – Persistent data storage
-
 These services are deplolyed in K3s.
 
 Request Flow:
