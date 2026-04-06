@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: ca1-ingress
   namespace: ca1
-  labels:
-    app.kubernetes.io/part-of: ca1-checkout
 spec:
   ingressClassName: traefik
   rules:
