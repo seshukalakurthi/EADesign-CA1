@@ -7,11 +7,16 @@ Architecture:
 
 This system replicates a workflow for e-commerce checkout made up of several autonomous services:
 
-Gateway – Starting point for all requests\n
-Checkout – Core Service\n
-Pricing – Price of the Product and tax\n
-Inventory – Validates stock availability
-PostgreSQL – Persistent data storage
+Gateway:    Starting point for all requests
+
+Checkout:    Core Service
+
+Pricing:     Price of the Product and tax calculations
+
+Inventory:   Validates stock availability
+
+PostgreSQL:  Persistent data storage
+
 These services are deplolyed in K3s.
 
 Request Flow:
