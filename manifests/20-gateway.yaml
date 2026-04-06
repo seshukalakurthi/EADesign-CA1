@@ -5,7 +5,6 @@ metadata:
   namespace: ca1
   labels:
     app: gateway
-    app.kubernetes.io/part-of: ca1-checkout
 spec:
   replicas: 1
   selector:
@@ -21,17 +20,18 @@ spec:
         runAsUser: 1000
       containers:
         - name: gateway
-          image: ca1/gateway:v1
+          image: ca1/gateway:v2
           imagePullPolicy: Never
           ports:
-            - containerPort: 3000
+            - name: http-gateway
+              containerPort: 3000
           env:
             - name: PORT
               value: "3000"
             - name: CHECKOUT_URL
               value: "http://keda-add-ons-http-interceptor-proxy.keda.svc.cluster.local:8080/checkout"
             - name: BACKEND_TIMEOUT_MS
-              value: "30000"         # longer timeout to absorb KEDA cold-start (~10-15s)
+              value: "60000"
             - name: ARCH_LABEL
               value: "nanoservices-kubernetes-keda"
           readinessProbe:
@@ -59,11 +59,9 @@ kind: Service
 metadata:
   name: gateway-svc
   namespace: ca1
-  labels:
-    app: gateway
 spec:
   selector:
     app: gateway
   ports:
     - port: 80
-      targetPort: 3000
+      targetPort: http-gateway
